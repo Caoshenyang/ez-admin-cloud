@@ -27,12 +27,19 @@
     </parent>
 
     <!-- 项目基本信息：定义 Maven 坐标与打包方式 -->
-    <groupId>com.ez</groupId> <!-- 组织标识 -->
+    <groupId>com.ez.admin</groupId> <!-- 组织标识：公司域名.项目名 -->
     <artifactId>ez-admin-cloud</artifactId> <!-- 项目标识 -->
     <version>1.0-SNAPSHOT</version> <!-- 当前版本：SNAPSHOT 表示开发中版本 -->
     <packaging>pom</packaging> <!-- 打包类型：pom 表示父工程，不生成构建产物 -->
     <name>ez-admin-cloud</name> <!-- 项目显示名称 -->
     <description>EZ Admin Cloud Base Parent - 基于微服务架构的后台管理系统父工程</description> <!-- 项目描述 -->
+
+    <!-- 子模块列表：聚合所有微服务模块 -->
+    <modules>
+        <module>ez-admin-common</module> <!-- 公共模块：提供通用工具类、常量定义、枚举、基础配置等 -->
+        <module>ez-admin-system-service</module>
+        <module>ez-admin-generator</module> <!-- 系统管理服务：提供 RBAC 基础能力（用户、角色、权限、菜单等） -->
+    </modules>
 
     <properties>
         <!-- Java 版本配置：统一管理 JDK 版本，子模块继承使用 -->
@@ -44,6 +51,10 @@
 
         <!-- 依赖版本管理：统一管理第三方库版本，避免版本冲突 -->
         <lombok.version>1.18.42</lombok.version> <!-- Lombok：通过注解简化 Java 代码 -->
+        <mybatis-plus.version>3.5.15</mybatis-plus.version> <!-- MyBatis Plus：MyBatis 增强工具包 -->
+        <springdoc.version>3.0.0</springdoc.version> <!-- SpringDoc OpenAPI：API 文档生成 -->
+        <postgresql.version>42.7.9</postgresql.version> <!-- PostgreSQL 驱动版本 -->
+
     </properties>
 
 
@@ -56,6 +67,41 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- SpringDoc OpenAPI：API 文档生成 -->
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc.version}</version>
+            </dependency>
+            <!-- MyBatis Plus：MyBatis 增强工具包 -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-spring-boot4-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <!-- JSqlParser 解析 SQL 语句，用于 MyBatis Plus 动态 SQL 功能 -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-jsqlparser</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <!-- MyBatis Plus 代码生成器，用于自动生成实体类、Mapper 接口、Service 层等 -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <!-- PostgreSQL 驱动 -->
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <!-- 依赖仓库：使用阿里云镜像加速依赖下载（国内推荐） -->
     <repositories>
