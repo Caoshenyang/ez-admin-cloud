@@ -42,3 +42,6 @@ build/
 .env
 .env.local
 .env.*.local
+
+### Code Generator Output ###
+ez-admin-generator/src/main/java/com/ez/admin/generator/*/
