@@ -9,9 +9,12 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>ez-admin-common</artifactId>
-    <description> 公共模块：提供通用工具类、常量定义、枚举等</description>
+    <artifactId>ez-admin-system-module</artifactId>
     <packaging>pom</packaging>
+    <modules>
+        <module>ez-admin-system-api</module>
+        <module>ez-admin-system-service</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>

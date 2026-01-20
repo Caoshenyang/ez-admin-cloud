@@ -5,12 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.ez.admin</groupId>
-        <artifactId>ez-admin-cloud</artifactId>
+        <artifactId>ez-admin-system-module</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>ez-admin-system-service</artifactId>
-    <description>系统管理原子服务：包含 RBAC 基础数据（用户、角色、权限、菜单等）</description>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>

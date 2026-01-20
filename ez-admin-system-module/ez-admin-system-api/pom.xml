@@ -5,13 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.ez.admin</groupId>
-        <artifactId>ez-admin-cloud</artifactId>
+        <artifactId>ez-admin-system-module</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>ez-admin-common</artifactId>
-    <description> 公共模块：提供通用工具类、常量定义、枚举等</description>
-    <packaging>pom</packaging>
+    <artifactId>ez-admin-system-api</artifactId>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>

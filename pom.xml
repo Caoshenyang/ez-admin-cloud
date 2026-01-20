@@ -37,8 +37,8 @@
     <!-- 子模块列表：聚合所有微服务模块 -->
     <modules>
         <module>ez-admin-common</module> <!-- 公共模块：提供通用工具类、常量定义、枚举、基础配置等 -->
-        <module>ez-admin-system-service</module>
-        <module>ez-admin-generator</module> <!-- 系统管理服务：提供 RBAC 基础能力（用户、角色、权限、菜单等） -->
+         <module>ez-admin-generator</module>
+        <module>ez-admin-system-module</module> <!-- 系统管理服务：提供 RBAC 基础能力（用户、角色、权限、菜单等） -->
     </modules>
 
     <properties>
@@ -54,7 +54,7 @@
         <mybatis-plus.version>3.5.15</mybatis-plus.version> <!-- MyBatis Plus：MyBatis 增强工具包 -->
         <springdoc.version>3.0.0</springdoc.version> <!-- SpringDoc OpenAPI：API 文档生成 -->
         <postgresql.version>42.7.9</postgresql.version> <!-- PostgreSQL 驱动版本 -->
-
+        <org.mapstruct.version>1.6.3</org.mapstruct.version> <!-- MapStruct：Java Bean 映射工具 -->
     </properties>
 
 
@@ -70,6 +70,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- MapStruct：Java Bean 映射工具 -->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${org.mapstruct.version}</version>
+            </dependency>
             <!-- SpringDoc OpenAPI：API 文档生成 -->
             <dependency>
                 <groupId>org.springdoc</groupId>
@@ -161,6 +167,11 @@
                                 <groupId>org.projectlombok</groupId>
                                 <artifactId>lombok</artifactId>
                                 <version>${lombok.version}</version>
+                            </path>
+                            <path>
+                                <groupId>org.mapstruct</groupId>
+                                <artifactId>mapstruct-processor</artifactId>
+                                <version>${org.mapstruct.version}</version>
                             </path>
                         </annotationProcessorPaths>
                     </configuration>

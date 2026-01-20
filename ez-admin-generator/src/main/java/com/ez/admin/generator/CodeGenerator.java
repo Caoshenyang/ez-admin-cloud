@@ -21,10 +21,11 @@ import java.util.concurrent.atomic.AtomicReference;
  *
  * <p>运行时通过控制台交互式输入配置信息：
  * <ul>
- *   <li>模块名称</li>
+ *   <li>模块名称（如：system，自动生成包名 com.ez.admin.system）</li>
  *   <li>表名（支持逗号分隔多个表，或输入 all 生成所有表）</li>
  * </ul>
  *
+ * <p>生成位置：当前模块（ez-admin-generator）下，方便手动复制到目标模块
  * <p>数据库配置优先级：系统环境变量 > JVM 启动参数 > .env 文件 > 默认值
  *
  * @author ez-admin
@@ -50,21 +51,16 @@ public class CodeGenerator {
             DB_HOST, DB_PORT, DB_NAME);
 
     public static void main(String[] args) {
-        AtomicReference<String> moduleShortName = new AtomicReference<>("");
+        AtomicReference<String> moduleName = new AtomicReference<>("");
 
-        // 获取当前路径
-        String projectRoot = System.getProperty("user.dir");
+        // 获取当前模块路径
+        String modulePath = System.getProperty("user.dir");
+        String outputDir = modulePath + "/ez-admin-generator/src/main/java";
 
         FastAutoGenerator.create(DB_URL, USERNAME, PASSWORD)
                 // 全局配置
                 .globalConfig((scanner, builder) -> {
-                    moduleShortName.set(scanner.apply("请输入模块名称（如：system）："));
-
-                    // 自动拼接完整模块名：ez-admin-domain-system
-                    String domainModuleName = "ez-admin-domain-" + moduleShortName.get();
-
-                    // 设置输出目录：ez-admin-domain/ez-admin-domain-system/src/main/java
-                    String outputDir = projectRoot + "/ez-admin-domain/" + domainModuleName + "/src/main/java";
+                    moduleName.set(scanner.apply("请输入模块名（如：system）："));
 
                     builder.author("ez-admin")
                             .disableOpenDir() // 生成完毕后不自动打开资源管理器
@@ -83,19 +79,18 @@ public class CodeGenerator {
                         })
                 )
                 // 包配置
-                .packageConfig((scanner, builder) -> {
-                    // 自动拼接完整模块名：ez-admin-domain-system
-                    String domainModuleName = "ez-admin-domain-" + moduleShortName.get();
+                .packageConfig(builder -> {
+                    // 自动拼接包名：com.ez.admin.{module}
+                    String packageName = "com.ez.admin.generator." + moduleName.get();
 
-                    builder.parent("com.ez.admin.domain." + moduleShortName.get()) // 包名：com.ez.admin.domain.system
+                    builder.parent(packageName)
                             .service("service")
                             .serviceImpl("service.impl")
                             .mapper("mapper")
                             .entity("entity")
                             .controller("controller")
-                            // 设置 mapperXml 生成路径：ez-admin-domain/ez-admin-domain-system/src/main/resources/mapper
-                            .pathInfo(Collections.singletonMap(OutputFile.xml,
-                                    projectRoot + "/ez-admin-domain/" + domainModuleName + "/src/main/resources/mapper"));
+                            // 不生成 mapper.xml
+                            .pathInfo(Collections.emptyMap());
                 })
                 // 策略配置
                 .strategyConfig((scanner, builder) -> {
@@ -111,6 +106,7 @@ public class CodeGenerator {
                             .idType(IdType.ASSIGN_ID) // 使用雪花算法生成主键
                             .enableLombok() // lombok 注解
                             .enableTableFieldAnnotation() // 启用字段注解
+                            .fieldUseJavaDoc(false) // 禁用字段 JavaDoc 注释
                             .mapperBuilder() // 设置 mapper 生成规则
                             .serviceBuilder() // 设置 service 生成规则
                             .controllerBuilder() // 设置 controller 生成规则
