@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    EZ Admin Cloud - 父工程 POM 配置文件
+
+    说明：
+    1. 本文件为整个微服务项目的父 POM，统一管理依赖版本、插件配置与仓库设置
+    2. 子模块通过继承此 POM，自动获取所有配置，无需重复定义
+    3. 依赖版本管理：优先使用 Spring Boot Parent 提供的版本，自定义版本在 properties 中定义
+    4. 构建插件：在 pluginManagement 中预配置常用插件，子模块按需引用
+
+    注意事项：
+    - 修改依赖版本时，需确保与 Spring Boot 4.0.1 兼容
+    - 新增子模块时，只需声明 <parent> 继承此 POM，自动获取所有配置
+    - 阿里云镜像仅加速国内下载，生产环境可替换为私有 Nexus 仓库
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion> <!-- POM 模型版本，Maven 2.x/3.x 固定为 4.0.0 -->
+
+    <!-- 父项目：继承 Spring Boot Starter Parent，用于管理 Spring Boot 生态系统的依赖版本 -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.0.1</version> <!-- Spring Boot 版本 -->
+        <relativePath/> <!-- 从远程仓库获取父 POM，不使用本地相对路径 -->
+    </parent>
+
+    <!-- 项目基本信息：定义 Maven 坐标与打包方式 -->
+    <groupId>com.ez</groupId> <!-- 组织标识 -->
+    <artifactId>ez-admin-cloud</artifactId> <!-- 项目标识 -->
+    <version>1.0-SNAPSHOT</version> <!-- 当前版本：SNAPSHOT 表示开发中版本 -->
+    <packaging>pom</packaging> <!-- 打包类型：pom 表示父工程，不生成构建产物 -->
+    <name>ez-admin-cloud</name> <!-- 项目显示名称 -->
+    <description>EZ Admin Cloud Base Parent - 基于微服务架构的后台管理系统父工程</description> <!-- 项目描述 -->
+
+    <properties>
+        <!-- Java 版本配置：统一管理 JDK 版本，子模块继承使用 -->
+        <java.version>21</java.version> <!-- Java 源代码与目标字节码版本 -->
+        <maven.compiler.source>${java.version}</maven.compiler.source> <!-- Maven 编译源码版本 -->
+        <maven.compiler.target>${java.version}</maven.compiler.target> <!-- Maven 编译目标版本 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> <!-- 项目源码编码格式 -->
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding> <!-- 报告输出编码格式 -->
+
+        <!-- 依赖版本管理：统一管理第三方库版本，避免版本冲突 -->
+        <lombok.version>1.18.42</lombok.version> <!-- Lombok：通过注解简化 Java 代码 -->
+    </properties>
+
+
+    <!-- 全局依赖：所有子模块默认继承 -->
+    <dependencies>
+        <!-- Lombok：通过注解简化 Java 代码（getter/setter/构造器等） -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+    <!-- 依赖仓库：使用阿里云镜像加速依赖下载（国内推荐） -->
+    <repositories>
+        <repository>
+            <id>aliyun-public</id>
+            <name>Aliyun Public Repository</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled> <!-- 允许下载正式版本 -->
+            </releases>
+            <snapshots>
+                <enabled>false</enabled> <!-- 禁用快照版本，保证构建稳定性 -->
+            </snapshots>
+        </repository>
+        <!-- Spring Boot 仓库（备用）：当阿里云镜像缺少依赖时使用 -->
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <!-- 插件仓库：存放 Maven 构建插件的 JAR 包 -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>aliyun-public</id>
+            <name>Aliyun Plugin Repository</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled> <!-- 允许下载插件正式版本 -->
+            </releases>
+            <snapshots>
+                <enabled>false</enabled> <!-- 禁用插件快照版本，保证构建稳定性 -->
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <!-- 构建配置：定义项目构建过程中的插件管理与资源处理 -->
+    <build>
+        <!-- 插件版本管理：统一管理插件版本，子模块引用时无需指定版本 -->
+        <pluginManagement>
+            <plugins>
+                <!-- Maven 编译插件：处理 Java 源代码编译 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>${java.version}</source> <!-- 源代码兼容版本 -->
+                        <target>${java.version}</target> <!-- 目标字节码版本 -->
+                        <encoding>${project.build.sourceEncoding}</encoding> <!-- 编译编码格式 -->
+                        <annotationProcessorPaths>
+                            <!-- Lombok 注解处理器：编译时生成代码（getter/setter 等） -->
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>${lombok.version}</version>
+                            </path>
+                        </annotationProcessorPaths>
+                    </configuration>
+                </plugin>
+
+                <!-- Spring Boot Maven 插件：提供打包与运行支持（仅需打包的子模块引用） -->
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <!-- 排除 Lombok 依赖，避免打包到最终 JAR 中 -->
+                            <exclude>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                            </exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+
+                <!-- Maven 资源插件：处理资源文件过滤与编码 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <configuration>
+                        <encoding>${project.build.sourceEncoding}</encoding> <!-- 资源文件编码 -->
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>
