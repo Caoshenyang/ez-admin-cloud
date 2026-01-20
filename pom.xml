@@ -37,7 +37,7 @@
     <!-- 子模块列表：聚合所有微服务模块 -->
     <modules>
         <module>ez-admin-common</module> <!-- 公共模块：提供通用工具类、常量定义、枚举、基础配置等 -->
-         <module>ez-admin-generator</module>
+        <module>ez-admin-generator</module>
         <module>ez-admin-system-module</module> <!-- 系统管理服务：提供 RBAC 基础能力（用户、角色、权限、菜单等） -->
     </modules>
 
@@ -55,6 +55,12 @@
         <springdoc.version>3.0.0</springdoc.version> <!-- SpringDoc OpenAPI：API 文档生成 -->
         <postgresql.version>42.7.9</postgresql.version> <!-- PostgreSQL 驱动版本 -->
         <org.mapstruct.version>1.6.3</org.mapstruct.version> <!-- MapStruct：Java Bean 映射工具 -->
+
+        <!-- 微服务相关版本-->
+        <spring-cloud-alibaba.version>2025.1.0.0-SNAPSHOT
+        </spring-cloud-alibaba.version> <!-- Spring Cloud Alibaba 版本 -->
+        <spring-cloud.version>2025.1.0</spring-cloud.version> <!-- Spring Cloud 版本 -->
+
     </properties>
 
 
@@ -70,6 +76,22 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- Spring Cloud Alibaba 依赖管理：导入 Spring Cloud Alibaba 生态系统的依赖版本 -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Spring Cloud 依赖管理：导入 Spring Cloud 生态系统的依赖版本 -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <!-- MapStruct：Java Bean 映射工具 -->
             <dependency>
                 <groupId>org.mapstruct</groupId>
@@ -120,6 +142,17 @@
             </releases>
             <snapshots>
                 <enabled>false</enabled> <!-- 禁用快照版本，保证构建稳定性 -->
+            </snapshots>
+        </repository>
+        <!-- Spring Cloud Alibaba 仓库：用于下载 Spring Cloud Alibaba 生态系统的依赖(快照版本) -->
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/alibaba/spring-cloud-alibaba</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
             </snapshots>
         </repository>
         <!-- Spring Boot 仓库（备用）：当阿里云镜像缺少依赖时使用 -->
