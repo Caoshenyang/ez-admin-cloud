@@ -18,6 +18,13 @@
     </properties>
 
     <dependencies>
+        <!-- System API：系统服务 API 定义（供其他服务 Feign 调用） -->
+        <dependency>
+            <groupId>com.ez.admin</groupId>
+            <artifactId>ez-admin-system-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
         <!-- Spring Boot Web MVC 依赖：用于构建基于 Spring Boot 的 Web 应用程序 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -52,7 +59,12 @@
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-         </dependency>
+        </dependency>
+        <!-- Spring Cloud LoadBalancer：客户端负载均衡 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

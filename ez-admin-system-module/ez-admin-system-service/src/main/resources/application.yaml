@@ -33,6 +33,7 @@ spring:
       username: ${NACOS_USERNAME:nacos}
       password: ${NACOS_PASSWORD:nacos}
       discovery:
+        enabled: true
         server-addr: localhost:18848
         namespace: f4f5efdf-bffc-4305-a1d5-78d0ae7f97a5
 

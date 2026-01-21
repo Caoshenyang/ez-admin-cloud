@@ -6,6 +6,9 @@ import com.ez.admin.iam.model.dto.UserLoginRequestDTO;
 import com.ez.admin.iam.model.vo.RefreshTokenResponseVO;
 import com.ez.admin.iam.model.vo.UserLoginResponseVO;
 import com.ez.admin.iam.service.AuthService;
+import com.ez.admin.system.api.dto.UserAuthenticationRequestDTO;
+import com.ez.admin.system.api.dto.UserAuthenticationResponseVO;
+import com.ez.admin.system.api.feign.SystemUserFeignClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
  * 认证服务实现类
  * <p>
  * 基于 Sa-Token 框架实现用户认证、登出和令牌刷新功能。
+ * 通过 Feign 远程调用系统服务获取用户信息。
  * </p>
  *
  * @see <a href="https://sa-token.cc">Sa-Token 官方文档</a>
@@ -23,6 +27,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
+
+    private final SystemUserFeignClient systemUserFeignClient;
 
     /**
      * 访问令牌过期时间（秒），从配置文件读取
@@ -40,7 +46,8 @@ public class AuthServiceImpl implements AuthService {
      * 验证用户凭证并生成访问令牌和刷新令牌。
      * 实现步骤：
      * <ol>
-     *   <li>验证用户名和密码（TODO: 需要对接用户数据源）</li>
+     *   <li>通过 Feign 调用系统服务获取用户信息</li>
+     *   <li>验证密码（TODO: 使用 BCrypt 等加密算法比对）</li>
      *   <li>调用 Sa-Token 的 login 方法进行登录</li>
      *   <li>生成刷新令牌（使用 tokenName + ":refresh:" + userId 格式）</li>
      *   <li>返回登录响应，包含 access_token 和 refresh_token</li>
@@ -58,19 +65,26 @@ public class AuthServiceImpl implements AuthService {
 
         log.info("用户登录请求: username={}", username);
 
-        // TODO: 实际项目中需要对接数据库，验证用户名和密码
-        // 这里暂时使用硬编码的演示数据
-        // 正常流程：
-        // 1. 根据 username 查询用户信息（UserMapper.selectByUsername(username)）
-        // 2. 验证密码（使用 BCrypt 等加密算法比对）
-        // 3. 检查用户状态（是否被禁用、是否过期等）
-        if (!"admin".equals(username) || !"admin123".equals(password)) {
-            log.warn("用户登录失败: username={}, 原因=用户名或密码错误", username);
+        // 通过 Feign 调用系统服务，获取用户认证信息
+        UserAuthenticationRequestDTO authRequestDTO = new UserAuthenticationRequestDTO();
+        authRequestDTO.setUsername(username);
+        authRequestDTO.setPassword(password);
+
+        UserAuthenticationResponseVO authResponse = systemUserFeignClient.authenticateUser(authRequestDTO);
+
+        // TODO: 验证密码（使用 BCrypt 等加密算法比对）
+        // 当前系统服务返回的密码是加密后的，需要使用 BCrypt.checkpw() 进行比对
+        // if (!BCrypt.checkpw(password, authResponse.getPassword())) {
+        //     log.warn("用户登录失败: username={}, 原因=密码错误", username);
+        //     throw new IllegalArgumentException("用户名或密码错误");
+        // }
+        // 暂时直接比对（实际应该使用加密算法）
+        if (!password.equals(authResponse.getPassword())) {
+            log.warn("用户登录失败: username={}, 原因=密码错误", username);
             throw new IllegalArgumentException("用户名或密码错误");
         }
 
-        // 模拟用户 ID（实际应从数据库获取）
-        Long userId = 1001L;
+        Long userId = authResponse.getUserId();
 
         // 使用 Sa-Token 进行登录，生成 access_token
         StpUtil.login(userId);
@@ -151,9 +165,9 @@ public class AuthServiceImpl implements AuthService {
             String userIdStr = refreshToken.substring(prefix.length());
             Long userId = Long.parseLong(userIdStr);
 
-            // TODO: 验证用户是否存在且有效（对接数据库）
-            // User user = userMapper.selectById(userId);
-            // if (user == null || user.getStatus() == UserStatus.DISABLED) {
+            // TODO: 验证用户是否存在且有效（可通过 Feign 调用系统服务）
+            // UserAuthenticationResponseVO user = systemUserFeignClient.getUserById(userId);
+            // if (user == null || user.getStatus() != 1) {
             //     throw new IllegalArgumentException("用户不存在或已被禁用");
             // }
 

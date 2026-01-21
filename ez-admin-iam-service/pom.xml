@@ -18,29 +18,19 @@
     </properties>
 
     <dependencies>
-        <!-- Sa-Token 权限认证，在线文档：https://sa-token.cc -->
+        <!-- System API：系统服务 API 定义（Feign 远程调用） -->
         <dependency>
-            <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-spring-boot3-starter</artifactId>
-            <version>1.44.0</version>
-        </dependency>
-        <!-- Sa-Token 整合 jwt -->
-        <dependency>
-            <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-jwt</artifactId>
-            <version>1.44.0</version>
-        </dependency>
-        <!-- Sa-Token 整合 RedisTemplate -->
-        <dependency>
-            <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-redis-template</artifactId>
-            <version>1.44.0</version>
+            <groupId>com.ez.admin</groupId>
+            <artifactId>ez-admin-system-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
-        <!-- 提供 Redis 连接池 -->
+
+
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-pool2</artifactId>
+            <groupId>com.ez.admin</groupId>
+            <artifactId>ez-admin-satoken-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <!-- Spring Boot Web MVC 依赖：用于构建基于 Spring Boot 的 Web 应用程序 -->
@@ -77,6 +67,16 @@
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <!-- Spring Cloud OpenFeign：声明式 HTTP 客户端 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <!-- Spring Cloud LoadBalancer：客户端负载均衡 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
