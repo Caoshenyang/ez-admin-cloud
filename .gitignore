@@ -45,3 +45,4 @@ build/
 
 ### Code Generator Output ###
 ez-admin-generator/src/main/java/com/ez/admin/generator/*/
+ez-admin-generator/src/main/resources/
