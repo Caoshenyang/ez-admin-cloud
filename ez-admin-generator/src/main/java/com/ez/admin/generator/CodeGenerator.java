@@ -25,7 +25,11 @@ import java.util.concurrent.atomic.AtomicReference;
  *   <li>表名（支持逗号分隔多个表，或输入 all 生成所有表）</li>
  * </ul>
  *
- * <p>生成位置：当前模块（ez-admin-generator）下，方便手动复制到目标模块
+ * <p>生成位置：直接生成到目标业务模块目录
+ * <ul>
+ *   <li>Java 代码：ez-admin-{module}-module/ez-admin-{module}-service/src/main/java/com/ez/admin/{module}/</li>
+ *   <li>Mapper XML：ez-admin-{module}-module/ez-admin-{module}-service/src/main/resources/mapper/</li>
+ * </ul>
  * <p>数据库配置优先级：系统环境变量 > JVM 启动参数 > .env 文件 > 默认值
  *
  * @author ez-admin
@@ -53,19 +57,22 @@ public class CodeGenerator {
     public static void main(String[] args) {
         AtomicReference<String> moduleName = new AtomicReference<>("");
 
-        // 获取当前模块路径
-        String modulePath = System.getProperty("user.dir");
-        String outputDir = modulePath + "/ez-admin-generator/src/main/java";
+        // 获取当前项目路径
+        String projectPath = System.getProperty("user.dir");
 
         FastAutoGenerator.create(DB_URL, USERNAME, PASSWORD)
                 // 全局配置
                 .globalConfig((scanner, builder) -> {
                     moduleName.set(scanner.apply("请输入模块名（如：system）："));
 
+                    // 构建目标模块的输出路径
+                    String targetModule = "ez-admin-" + moduleName.get() + "-module/ez-admin-" + moduleName.get() + "-service";
+                    String javaOutputDir = projectPath + "/" + targetModule + "/src/main/java";
+
                     builder.author("ez-admin")
                             .disableOpenDir() // 生成完毕后不自动打开资源管理器
                             .enableSpringdoc() // 启用 SpringDoc OpenAPI 注解，生成 @Schema 注解
-                            .outputDir(outputDir);
+                            .outputDir(javaOutputDir);
                 })
                 // 数据源配置（PostgreSQL 类型转换处理）
                 .dataSourceConfig(builder ->
@@ -81,16 +88,22 @@ public class CodeGenerator {
                 // 包配置
                 .packageConfig(builder -> {
                     // 自动拼接包名：com.ez.admin.{module}
-                    String packageName = "com.ez.admin.generator." + moduleName.get();
+                    String packageName = "com.ez.admin";
+                    String module = moduleName.get();
+
+                    // 构建目标模块的 resources 输出路径
+                    String targetModule = "ez-admin-" + module + "-module/ez-admin-" + module + "-service";
+                    String resourcesOutputDir = System.getProperty("user.dir") + "/" + targetModule + "/src/main/resources";
 
                     builder.parent(packageName)
+                            .moduleName(module)
+                            .entity("entity")
+                            .mapper("mapper")
                             .service("service")
                             .serviceImpl("service.impl")
-                            .mapper("mapper")
-                            .entity("entity")
                             .controller("controller")
-                            // 不生成 mapper.xml
-                            .pathInfo(Collections.emptyMap());
+                            .pathInfo(Collections.singletonMap(OutputFile.xml, resourcesOutputDir + "/mapper/"));
+
                 })
                 // 策略配置
                 .strategyConfig((scanner, builder) -> {
@@ -109,8 +122,12 @@ public class CodeGenerator {
                             .fieldUseJavaDoc(false) // 禁用字段 JavaDoc 注释
                             .mapperBuilder() // 设置 mapper 生成规则
                             .serviceBuilder() // 设置 service 生成规则
+                            .mapperBuilder() // 设置 mapper 生成规则
                             .controllerBuilder() // 设置 controller 生成规则
-                            .disable(); // 禁用生成 @RestController 控制器（根据业务需求手动创建）
+                            .disable() // 禁用生成 @RestController 控制器（根据业务需求手动创建）
+
+                    ;
+
                 })
                 .templateEngine(new FreemarkerTemplateEngine()) // 使用 FreeMarker 引擎模板
                 .execute();
