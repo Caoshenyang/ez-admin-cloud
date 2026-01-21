@@ -57,11 +57,6 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-jsqlparser</artifactId>
         </dependency>
-        <!-- MapStruct 依赖：用于 Java Bean 映射 -->
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-        </dependency>
         <!-- Spring Cloud Alibaba 依赖 -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>

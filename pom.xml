@@ -70,13 +70,16 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>
+        </dependency>
+        <!-- MapStruct：Java Bean 映射工具 -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
         </dependency>
         <!-- Swagger Annotations Jakarta：Swagger 注解（用于 API 文档） -->
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-annotations-jakarta</artifactId>
-            <optional>true</optional>
         </dependency>
     </dependencies>
 
