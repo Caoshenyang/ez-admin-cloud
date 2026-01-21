@@ -2,4 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ez.admin.system.mapper.SysUserRoleRelationMapper">
 
+    <!--
+        根据用户ID查询角色ID列表
+    -->
+    <select id="selectRoleIdsByUserId" resultType="java.lang.Long">
+        SELECT role_id
+        FROM ez_admin_sys_user_role_relation
+        WHERE user_id = #{userId}
+    </select>
+
 </mapper>

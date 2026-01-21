@@ -9,7 +9,8 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>ez-admin-satoken-common</artifactId>
+    <artifactId>ez-admin-feign-common</artifactId>
+    <description>Feign远程调用公共模块：提供Feign自动解包、异常处理等</description>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -18,29 +19,22 @@
     </properties>
 
     <dependencies>
-        <!-- Sa-Token 权限认证，在线文档：https://sa-token.cc -->
+        <!-- Spring Cloud OpenFeign -->
         <dependency>
-            <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-spring-boot3-starter</artifactId>
-            <version>1.44.0</version>
-        </dependency>
-        <!-- Sa-Token 整合 jwt -->
-        <dependency>
-            <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-jwt</artifactId>
-            <version>1.44.0</version>
-        </dependency>
-        <!-- Sa-Token 整合 RedisTemplate -->
-        <dependency>
-            <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-redis-template</artifactId>
-            <version>1.44.0</version>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
-        <!-- 提供 Redis 连接池 -->
+        <!-- Sa-Token -->
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-pool2</artifactId>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-core</artifactId>
+        </dependency>
+
+        <!-- Spring Boot Web (提供 HTTP 消息转换器) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <!-- Result Common：统一返回结果对象 -->
@@ -50,6 +44,12 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
 </project>

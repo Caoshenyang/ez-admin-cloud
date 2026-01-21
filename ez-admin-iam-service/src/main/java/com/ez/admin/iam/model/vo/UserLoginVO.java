@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 用户登录响应 VO
+ * 用户登录 VO
  * <p>
  * 返回用户登录成功后的认证信息，包括访问令牌和刷新令牌。
  * 前端获取令牌后，需要在后续请求的 Header 中携带 Token 进行身份认证。
@@ -17,8 +17,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "用户登录响应")
-public class UserLoginResponseVO {
+@Schema(description = "用户登录")
+public class UserLoginVO {
 
     /**
      * 访问令牌 (Access Token)

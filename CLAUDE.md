@@ -25,11 +25,13 @@
 
 - **严禁使用模糊命名**（如 `BaseReq`, `Handle.java`）
 - **必须使用明确的语义化命名**：
-  - DTO: `UserQueryDTO`, `RoleCreateDTO`
-  - VO: `UserResponseVO`, `MenuTreeVO`
-  - Service: `UserService`, `RoleService`
-  - Mapper: `UserMapper`, `RoleMapper`
-  - Entity: 严格对应数据库表名，使用 Pascal Case
+  - **DTO (Data Transfer Object)**：`UserQueryDTO`, `RoleCreateDTO`, `UserLoginRequestDTO` - 用于接收请求参数
+  - **VO (View Object)**：`UserVO`, `RolePermissionVO`, `MenuTreeVO` - 用于返回展示数据（**禁止加 Response 后缀**）
+  - **Service**：`UserService`, `RoleService`
+  - **Mapper**：`UserMapper`, `RoleMapper`
+  - **Entity**：严格对应数据库表名，使用 Pascal Case
+
+**命名原则：VO 本身就表示返回对象，无需再加 Response 后缀**
 
 ### 2. MyBatis-Plus 使用规范 (核心架构原则)
 

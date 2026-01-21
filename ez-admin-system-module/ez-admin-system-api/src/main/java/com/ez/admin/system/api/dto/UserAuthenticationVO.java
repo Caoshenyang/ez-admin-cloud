@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 用户认证响应 VO
+ * 用户认证 VO
  * <p>
  * 系统服务返回的用户认证信息，包含用户基本信息。
  * IAM 服务使用此信息进行后续的 Token 生成和权限验证。
@@ -17,8 +17,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "用户认证响应")
-public class UserAuthenticationResponseVO {
+@Schema(description = "用户认证")
+public class UserAuthenticationVO {
 
     /**
      * 用户 ID

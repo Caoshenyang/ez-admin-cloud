@@ -2,8 +2,8 @@ package com.ez.admin.iam.service;
 
 import com.ez.admin.iam.model.dto.RefreshTokenRequestDTO;
 import com.ez.admin.iam.model.dto.UserLoginRequestDTO;
-import com.ez.admin.iam.model.vo.RefreshTokenResponseVO;
-import com.ez.admin.iam.model.vo.UserLoginResponseVO;
+import com.ez.admin.iam.model.vo.RefreshTokenVO;
+import com.ez.admin.iam.model.vo.UserLoginVO;
 
 /**
  * 认证服务接口
@@ -32,11 +32,11 @@ public interface AuthService {
      * </p>
      *
      * @param requestDTO 登录请求，包含用户名和密码
-     * @return 登录响应，包含访问令牌和刷新令牌
+     * @return 登录信息，包含访问令牌和刷新令牌
      * @throws IllegalArgumentException 用户名或密码错误
      * @throws IllegalStateException    用户已被禁用
      */
-    UserLoginResponseVO login(UserLoginRequestDTO requestDTO);
+    UserLoginVO login(UserLoginRequestDTO requestDTO);
 
     /**
      * 用户登出
@@ -68,8 +68,8 @@ public interface AuthService {
      * </p>
      *
      * @param requestDTO 刷新令牌请求，包含有效的 refresh_token
-     * @return 刷新令牌响应，包含新的访问令牌和刷新令牌
+     * @return 刷新令牌信息，包含新的访问令牌和刷新令牌
      * @throws IllegalArgumentException 刷新令牌无效或已过期
      */
-    RefreshTokenResponseVO refreshToken(RefreshTokenRequestDTO requestDTO);
+    RefreshTokenVO refreshToken(RefreshTokenRequestDTO requestDTO);
 }

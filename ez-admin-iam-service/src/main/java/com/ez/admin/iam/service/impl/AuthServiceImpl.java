@@ -3,16 +3,22 @@ package com.ez.admin.iam.service.impl;
 import cn.dev33.satoken.stp.StpUtil;
 import com.ez.admin.iam.model.dto.RefreshTokenRequestDTO;
 import com.ez.admin.iam.model.dto.UserLoginRequestDTO;
-import com.ez.admin.iam.model.vo.RefreshTokenResponseVO;
-import com.ez.admin.iam.model.vo.UserLoginResponseVO;
+import com.ez.admin.iam.model.vo.RefreshTokenVO;
+import com.ez.admin.iam.model.vo.UserLoginVO;
 import com.ez.admin.iam.service.AuthService;
+import com.ez.admin.iam.service.PermissionCacheService;
 import com.ez.admin.system.api.dto.UserAuthenticationRequestDTO;
-import com.ez.admin.system.api.dto.UserAuthenticationResponseVO;
+import com.ez.admin.system.api.dto.UserAuthenticationVO;
+import com.ez.admin.system.api.dto.UserRoleVO;
 import com.ez.admin.system.api.feign.SystemUserFeignClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 认证服务实现类
@@ -29,6 +35,7 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
 
     private final SystemUserFeignClient systemUserFeignClient;
+    private final PermissionCacheService permissionCacheService;
 
     /**
      * 访问令牌过期时间（秒），从配置文件读取
@@ -49,17 +56,19 @@ public class AuthServiceImpl implements AuthService {
      *   <li>通过 Feign 调用系统服务获取用户信息</li>
      *   <li>验证密码（TODO: 使用 BCrypt 等加密算法比对）</li>
      *   <li>调用 Sa-Token 的 login 方法进行登录</li>
+     *   <li>查询用户角色并缓存到 Redis</li>
+     *   <li>聚合用户权限并缓存到 Redis</li>
      *   <li>生成刷新令牌（使用 tokenName + ":refresh:" + userId 格式）</li>
-     *   <li>返回登录响应，包含 access_token 和 refresh_token</li>
+     *   <li>返回登录信息，包含 access_token 和 refresh_token</li>
      * </ol>
      * </p>
      *
      * @param requestDTO 登录请求，包含用户名和密码
-     * @return 登录响应，包含访问令牌和刷新令牌
+     * @return 登录信息，包含访问令牌和刷新令牌
      * @throws IllegalArgumentException 用户名或密码错误
      */
     @Override
-    public UserLoginResponseVO login(UserLoginRequestDTO requestDTO) {
+    public UserLoginVO login(UserLoginRequestDTO requestDTO) {
         String username = requestDTO.getUsername();
         String password = requestDTO.getPassword();
 
@@ -70,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
         authRequestDTO.setUsername(username);
         authRequestDTO.setPassword(password);
 
-        UserAuthenticationResponseVO authResponse = systemUserFeignClient.authenticateUser(authRequestDTO);
+        UserAuthenticationVO authResponse = systemUserFeignClient.authenticateUser(authRequestDTO);
 
         // TODO: 验证密码（使用 BCrypt 等加密算法比对）
         // 当前系统服务返回的密码是加密后的，需要使用 BCrypt.checkpw() 进行比对
@@ -90,6 +99,21 @@ public class AuthServiceImpl implements AuthService {
         StpUtil.login(userId);
         String accessToken = StpUtil.getTokenValue();
 
+        // 查询用户角色并缓存到 Redis
+        UserRoleVO userRoles = systemUserFeignClient.getUserRoles(userId);
+        if (userRoles != null && userRoles.getRoleIds() != null) {
+            // 缓存用户-角色映射
+            permissionCacheService.cacheUserRoles(userId, userRoles.getRoleIds());
+
+            // 聚合用户权限（从角色权限缓存中获取）
+            List<String> userPermissions = aggregateUserPermissions(userRoles.getRoleIds());
+            // 缓存用户-权限映射
+            permissionCacheService.cacheUserPermissions(userId, userPermissions);
+
+            log.info("用户权限缓存成功: userId={}, 角色数量={}, 权限数量={}",
+                    userId, userRoles.getRoleIds().size(), userPermissions.size());
+        }
+
         // 生成 refresh_token
         // 格式：tokenName:refresh:userId，便于后续验证和撤销
         String tokenName = StpUtil.getTokenName();
@@ -97,13 +121,35 @@ public class AuthServiceImpl implements AuthService {
 
         log.info("用户登录成功: userId={}, username={}, accessToken={}", userId, username, accessToken);
 
-        // 返回登录响应（使用 Builder 模式）
-        return UserLoginResponseVO.builder()
+        // 返回登录信息（使用 Builder 模式）
+        return UserLoginVO.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .tokenType("Bearer")
                 .expiresIn(accessTokenExpireSeconds)
                 .build();
+    }
+
+    /**
+     * 聚合用户权限
+     * <p>
+     * 从用户的所有角色中聚合权限标识列表。
+     * 权限数据从 Redis 缓存中获取（启动时已初始化）。
+     * </p>
+     *
+     * @param roleIds 角色ID列表
+     * @return 权限标识列表
+     */
+    private List<String> aggregateUserPermissions(List<Long> roleIds) {
+        List<String> permissions = new ArrayList<>();
+        for (Long roleId : roleIds) {
+            List<String> rolePerms = permissionCacheService.getRolePermissions(roleId);
+            if (rolePerms != null) {
+                permissions.addAll(rolePerms);
+            }
+        }
+        // 去重并返回
+        return permissions.stream().distinct().collect(Collectors.toList());
     }
 
     /**
@@ -142,11 +188,11 @@ public class AuthServiceImpl implements AuthService {
      * </p>
      *
      * @param requestDTO 刷新令牌请求，包含 refresh_token
-     * @return 刷新令牌响应，包含新的访问令牌和刷新令牌
+     * @return 刷新令牌信息，包含新的访问令牌和刷新令牌
      * @throws IllegalArgumentException 刷新令牌无效或已过期
      */
     @Override
-    public RefreshTokenResponseVO refreshToken(RefreshTokenRequestDTO requestDTO) {
+    public RefreshTokenVO refreshToken(RefreshTokenRequestDTO requestDTO) {
         String refreshToken = requestDTO.getRefreshToken();
 
         log.info("刷新令牌请求: refreshToken={}", refreshToken);
@@ -166,7 +212,7 @@ public class AuthServiceImpl implements AuthService {
             Long userId = Long.parseLong(userIdStr);
 
             // TODO: 验证用户是否存在且有效（可通过 Feign 调用系统服务）
-            // UserAuthenticationResponseVO user = systemUserFeignClient.getUserById(userId);
+            // UserAuthenticationVO user = systemUserFeignClient.getUserById(userId);
             // if (user == null || user.getStatus() != 1) {
             //     throw new IllegalArgumentException("用户不存在或已被禁用");
             // }
@@ -180,7 +226,7 @@ public class AuthServiceImpl implements AuthService {
 
             log.info("刷新令牌成功: userId={}, newAccessToken={}", userId, newAccessToken);
 
-            return RefreshTokenResponseVO.builder()
+            return RefreshTokenVO.builder()
                     .accessToken(newAccessToken)
                     .refreshToken(newRefreshToken)
                     .tokenType("Bearer")

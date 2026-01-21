@@ -25,11 +25,23 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
-
+        <!-- Feign Common：Feign 远程调用公共模块（自动解包 SaResult） -->
+        <dependency>
+            <groupId>com.ez.admin</groupId>
+            <artifactId>ez-admin-feign-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>com.ez.admin</groupId>
             <artifactId>ez-admin-satoken-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Result Common：统一返回结果对象 -->
+        <dependency>
+            <groupId>com.ez.admin</groupId>
+            <artifactId>ez-admin-result-common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

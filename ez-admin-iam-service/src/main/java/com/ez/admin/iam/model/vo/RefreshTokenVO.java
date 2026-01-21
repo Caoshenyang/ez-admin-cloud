@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 刷新令牌响应 VO
+ * 刷新令牌 VO
  * <p>
  * 返回刷新后的认证信息，包含新的访问令牌和刷新令牌。
  * 为了安全性，刷新令牌也应该轮换更新（旧的 refresh_token 失效）。
@@ -17,8 +17,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "刷新令牌响应")
-public class RefreshTokenResponseVO {
+@Schema(description = "刷新令牌")
+public class RefreshTokenVO {
 
     /**
      * 新的访问令牌 (Access Token)
