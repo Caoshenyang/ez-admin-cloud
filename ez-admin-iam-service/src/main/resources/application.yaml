@@ -1,0 +1,120 @@
+server:
+  port: ${SERVER_PORT:8000}
+  shutdown: graceful
+
+spring:
+  application:
+    name: ez-admin-iam-service
+  servlet:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
+
+  # 数据源配置
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:ez_admin}?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=Asia/Shanghai
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    # Hikari 连接池配置
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      auto-commit: true
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: ${REDIS_DB:0}
+      timeout: 10s # 连接超时时间
+      lettuce:
+        pool:
+          # 连接池最大连接数
+          max-active: 200
+          # 连接池最大阻塞等待时间（使用负值表示没有限制）
+          max-wait: -1ms
+          # 连接池中的最大空闲连接
+          max-idle: 10
+          # 连接池中的最小空闲连接
+          min-idle: 0
+
+
+  # Nacos 服务发现配置
+  cloud:
+    nacos:
+      username: ${NACOS_USERNAME:nacos}
+      password: ${NACOS_PASSWORD:nacos}
+      discovery:
+        server-addr: localhost:18848
+        namespace: f4f5efdf-bffc-4305-a1d5-78d0ae7f97a5
+
+# MyBatis Plus 配置
+mybatis-plus:
+  # Mapper XML 扫描路径
+  mapper-locations: classpath*:mapper/**/*Mapper.xml
+  # 实体类扫描路径
+  type-aliases-package: com.ez.admin.iam.entity
+  configuration:
+    # 下划线转驼峰
+    map-underscore-to-camel-case: true
+    # 缓存开关
+    cache-enabled: true
+    # 日志输出
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  global-config:
+    db-config:
+      # 主键类型：ASSIGN_ID 为雪花算法
+      id-type: assign_id
+      # 逻辑删除字段
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+############## Sa-Token 配置 (文档: https://sa-token.cc) ##############
+sa-token:
+  # token 名称（同时也是 cookie 名称）
+  token-name: satoken
+  # token 有效期（单位：秒） 默认30天，-1 代表永久有效
+  timeout: 2592000
+  # token 最低活跃频率（单位：秒），如果 token 超过此时间没有访问系统就会被冻结，默认-1 代表不限制，永不冻结
+  active-timeout: -1
+  # 是否允许同一账号多地同时登录 （为 true 时允许一起登录, 为 false 时新登录挤掉旧登录）
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个 token （为 true 时所有登录共用一个 token, 为 false 时每次登录新建一个 token）
+  is-share: false
+  # token 风格（默认可取值：uuid、simple-uuid、random-32、random-64、random-128、tik）
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: true
+  # jwt秘钥
+  jwt-secret-key: asdasdasifhueuiwyurfewbfjsdafjk
+# SpringDoc OpenAPI 配置
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    display-request-duration: true
+    display-operation-id: true
+    default-models-expand-depth: 2
+    default-model-expand-depth: 2
+  # 分组配置
+  group-configs:
+    - group: system
+      paths-to-match: /iam/**
+      packages-to-scan: com.ez.admin.iam.controller
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    com.ez.admin.system: DEBUG
+    com.baomidou.mybatisplus: DEBUG

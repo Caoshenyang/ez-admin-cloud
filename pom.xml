@@ -38,7 +38,8 @@
     <modules>
         <module>ez-admin-common</module> <!-- 公共模块：提供通用工具类、常量定义、枚举、基础配置等 -->
         <module>ez-admin-generator</module>
-        <module>ez-admin-system-module</module> <!-- 系统管理服务：提供 RBAC 基础能力（用户、角色、权限、菜单等） -->
+        <module>ez-admin-system-module</module>
+        <module>ez-admin-iam-service</module> <!-- 系统管理服务：提供 RBAC 基础能力（用户、角色、权限、菜单等） -->
     </modules>
 
     <properties>
