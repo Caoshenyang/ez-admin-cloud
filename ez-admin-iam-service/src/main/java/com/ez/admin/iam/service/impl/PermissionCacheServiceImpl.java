@@ -3,8 +3,6 @@ package com.ez.admin.iam.service.impl;
 import com.ez.admin.iam.service.PermissionCacheService;
 import com.ez.admin.system.api.dto.RolePermissionVO;
 import com.ez.admin.system.api.feign.SystemUserFeignClient;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -17,7 +15,14 @@ import java.util.concurrent.TimeUnit;
  * 权限缓存服务实现类
  * <p>
  * 使用 Redis 存储角色-权限、用户-角色、用户-权限的映射关系。
- * 缓存数据以 JSON 格式存储，便于序列化和反序列化。
+ * </p>
+ * <p>
+ * RedisTemplate 使用全局 Jackson 配置：
+ * <ul>
+ *   <li>时间格式：yyyy-MM-dd HH:mm:ss</li>
+ *   <li>Long 类型：序列化为字符串（避免前端精度丢失）</li>
+ *   <li>类型安全：配置白名单，防止反序列化攻击</li>
+ * </ul>
  * </p>
  *
  * @author ez-admin
@@ -41,7 +46,6 @@ public class PermissionCacheServiceImpl implements PermissionCacheService {
     private static final Long CACHE_EXPIRE_SECONDS = null;
 
     private final RedisTemplate<String, Object> redisTemplate;
-    private final ObjectMapper objectMapper;
     private final SystemUserFeignClient systemUserFeignClient;
 
     @Override

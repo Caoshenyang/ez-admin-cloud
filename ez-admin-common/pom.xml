@@ -15,6 +15,7 @@
         <module>ez-admin-satoken-common</module>
         <module>ez-admin-feign-common</module>
         <module>ez-admin-result-common</module>
+        <module>ez-admin-redis-common</module>
     </modules>
     <packaging>pom</packaging>
 

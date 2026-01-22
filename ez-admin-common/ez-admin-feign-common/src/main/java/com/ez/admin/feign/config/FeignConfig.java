@@ -2,11 +2,10 @@ package com.ez.admin.feign.config;
 
 import com.ez.admin.feign.decoder.FeignResultDecoder;
 import feign.Request;
-import org.springframework.beans.factory.ObjectFactory;
-import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
-import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
+import feign.codec.Decoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,20 +28,17 @@ public class FeignConfig {
     /**
      * 配置 Feign 解码器
      * <p>
-     * 使用自定义的 FeignResultDecoder，自动解包 SaResult，
+     * 使用自定义的 FeignResultDecoder，自动解包 R&lt;T&gt;，
      * 让业务代码像调用本地方法一样调用远程接口。
      * </p>
      *
-     * @param messageConverters HTTP 消息转换器工厂
+     * @param springDecoder Spring 默认的 Feign 解码器
      * @return 自定义解码器
      */
     @Bean
-    public feign.codec.Decoder feignDecoder(ObjectFactory<HttpMessageConverters> messageConverters) {
-        return new FeignResultDecoder(
-                new ResponseEntityDecoder(
-                        new org.springframework.cloud.openfeign.support.SpringDecoder(messageConverters)
-                )
-        );
+    @Primary
+    public Decoder feignDecoder(Decoder springDecoder) {
+        return new FeignResultDecoder(springDecoder);
     }
 
     /**
@@ -59,7 +55,9 @@ public class FeignConfig {
                 // 连接超时时间：5 秒
                 5, TimeUnit.SECONDS,
                 // 读取超时时间：30 秒
-                30, TimeUnit.SECONDS
+                30, TimeUnit.SECONDS,
+                // 允许重定向
+                true
         );
     }
 }

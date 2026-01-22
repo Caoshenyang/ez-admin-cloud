@@ -1,11 +1,9 @@
 package com.ez.admin.system.api.feign;
 
-import com.ez.admin.feign.config.FeignConfig;
 import com.ez.admin.system.api.dto.RolePermissionVO;
 import com.ez.admin.system.api.dto.UserAuthenticationRequestDTO;
 import com.ez.admin.system.api.dto.UserAuthenticationVO;
 import com.ez.admin.system.api.dto.UserRoleVO;
-import com.ez.admin.system.api.fallback.SystemUserFeignClientFallbackFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,18 +20,13 @@ import java.util.List;
  * 使用 Spring Cloud OpenFeign 实现服务间通信。
  * </p>
  * <p>
- * 通过 {@link FeignConfig} 配置的解码器，远程调用会自动解包 SaResult，
- * 业务代码无需关心 SaResult 包装，直接使用返回的业务对象即可。
+ * 通过全局 Feign 配置的解码器，远程调用会自动解包 R&lt;T&gt;，
+ * 业务代码无需关心 R 包装，直接使用返回的业务对象即可。
  * </p>
  *
  * @see <a href="https://spring.io/projects/spring-cloud-openfeign">Spring Cloud OpenFeign</a>
  */
-@FeignClient(
-        name = "ez-admin-system-service",
-        path = "/api/v1/system",
-        configuration = FeignConfig.class,
-        fallbackFactory = SystemUserFeignClientFallbackFactory.class
-)
+@FeignClient(name = "ez-admin-system-service", path = "/api/v1/system")
 public interface SystemUserFeignClient {
 
     /**

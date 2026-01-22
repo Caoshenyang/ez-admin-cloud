@@ -56,6 +56,7 @@
         <springdoc.version>3.0.0</springdoc.version> <!-- SpringDoc OpenAPI：API 文档生成 -->
         <postgresql.version>42.7.9</postgresql.version> <!-- PostgreSQL 驱动版本 -->
         <org.mapstruct.version>1.6.3</org.mapstruct.version> <!-- MapStruct：Java Bean 映射工具 -->
+        <swagger-annotations.version>2.2.38</swagger-annotations.version> <!-- Swagger 注解（用于 API 文档） -->
 
         <!-- 微服务相关版本-->
         <spring-cloud-alibaba.version>2025.1.0.0-SNAPSHOT</spring-cloud-alibaba.version>
@@ -70,16 +71,20 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <optional>true</optional> <!-- 可选依赖：仅在编译时使用，不参与打包 -->
         </dependency>
         <!-- MapStruct：Java Bean 映射工具 -->
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
+            <optional>true</optional>
         </dependency>
         <!-- Swagger Annotations Jakarta：Swagger 注解（用于 API 文档） -->
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-annotations-jakarta</artifactId>
+            <version>${swagger-annotations.version}</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

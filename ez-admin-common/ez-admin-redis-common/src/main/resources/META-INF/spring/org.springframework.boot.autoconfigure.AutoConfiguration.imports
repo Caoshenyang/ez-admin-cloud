@@ -1,0 +1,2 @@
+com.ez.admin.redis.config.JacksonConfig
+com.ez.admin.redis.config.RedisTemplateConfig

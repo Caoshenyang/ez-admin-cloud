@@ -25,16 +25,10 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
-        <!-- Sa-Token -->
-        <dependency>
-            <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-core</artifactId>
-        </dependency>
-
         <!-- Spring Boot Web (提供 HTTP 消息转换器) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-webmvc</artifactId>
         </dependency>
 
         <!-- Result Common：统一返回结果对象 -->

@@ -5,36 +5,33 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.ez.admin</groupId>
-        <artifactId>ez-admin-system-module</artifactId>
+        <artifactId>ez-admin-common</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>ez-admin-system-api</artifactId>
+    <artifactId>ez-admin-redis-common</artifactId>
+    <description>Redis公共模块：提供RedisTemplate配置、Jackson序列化配置等</description>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Jackson 3 版本 -->
+        <jackson.version>3.0.3</jackson.version>
     </properties>
 
     <dependencies>
-        <!-- Sa-Token 公共模块：统一异常处理和权限接口 -->
-        <dependency>
-            <groupId>com.ez.admin</groupId>
-            <artifactId>ez-admin-satoken-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ez.admin</groupId>
-            <artifactId>ez-admin-feign-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <!-- Jakarta Validation：参数校验注解 -->
+        <!-- Spring Data Redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
+        <!-- Jackson 3 Core (用于 ObjectMapper 配置) -->
+        <dependency>
+            <groupId>tools.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
 
     </dependencies>
 
