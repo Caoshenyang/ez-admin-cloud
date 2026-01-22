@@ -1,11 +1,9 @@
-package com.ez.admin.redis.config;
+package com.ez.admin.core.config;
 
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.cfg.DateTimeFeature;
 import tools.jackson.databind.ext.javatime.deser.LocalDateTimeDeserializer;
@@ -47,15 +45,12 @@ public class JacksonConfig {
     public static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     /**
-     * 配置全局 ObjectMapper
+     * 配置全局 JsonMapperBuilderCustomizer
      * <p>
-     * 使用 {@link Primary} 注解，确保此 Bean 优先级最高，覆盖 Spring Boot 默认配置。
-     * </p>
-     * <p>
-     * 使用 {@link ConditionalOnMissingBean} 注解，允许用户在特定场景下自定义 ObjectMapper。
+     * 自定义 ObjectMapper 行为，应用于所有 JSON 序列化场景（Web、Redis、Feign）。
      * </p>
      *
-     * @return 全局 ObjectMapper 实例
+     * @return JsonMapperBuilderCustomizer 实例
      */
     @Bean
     public JsonMapperBuilderCustomizer jsonMapperBuilderCustomizer() {

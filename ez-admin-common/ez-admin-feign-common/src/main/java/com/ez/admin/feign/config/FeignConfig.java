@@ -3,9 +3,17 @@ package com.ez.admin.feign.config;
 import com.ez.admin.feign.decoder.FeignResultDecoder;
 import feign.Request;
 import feign.codec.Decoder;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.cloud.openfeign.support.FeignHttpMessageConverters;
+import org.springframework.cloud.openfeign.support.HttpMessageConverterCustomizer;
+import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
+import org.springframework.cloud.openfeign.support.SpringDecoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverters;
 
 import java.util.concurrent.TimeUnit;
 
@@ -25,20 +33,27 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class FeignConfig {
 
-    /**
-     * 配置 Feign 解码器
-     * <p>
-     * 使用自定义的 FeignResultDecoder，自动解包 R&lt;T&gt;，
-     * 让业务代码像调用本地方法一样调用远程接口。
-     * </p>
-     *
-     * @param springDecoder Spring 默认的 Feign 解码器
-     * @return 自定义解码器
-     */
+
     @Bean
     @Primary
-    public Decoder feignDecoder(Decoder springDecoder) {
-        return new FeignResultDecoder(springDecoder);
+    public Decoder feignDecoder(
+            ObjectProvider<HttpMessageConverter<?>> messageConverters,
+            ObjectProvider<HttpMessageConverterCustomizer> customizers) {
+
+        // 1. 手动实例化那个你研究过的源码类
+        FeignHttpMessageConverters feignConverters =
+                new FeignHttpMessageConverters(messageConverters, customizers);
+
+        // 2. 构造一个简单的 Provider 包装它
+        ObjectProvider<FeignHttpMessageConverters> provider = new ObjectProvider<>() {
+            @Override public FeignHttpMessageConverters getObject() { return feignConverters; }
+            @Override public FeignHttpMessageConverters getObject(Object... args) { return feignConverters; }
+            @Override public FeignHttpMessageConverters getIfAvailable() { return feignConverters; }
+            @Override public FeignHttpMessageConverters getIfUnique() { return feignConverters; }
+        };
+
+        // 3. 注入到你的自定义解码器中
+        return new FeignResultDecoder(provider);
     }
 
     /**

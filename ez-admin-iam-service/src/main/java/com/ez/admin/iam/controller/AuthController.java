@@ -5,7 +5,7 @@ import com.ez.admin.iam.model.dto.UserLoginRequestDTO;
 import com.ez.admin.iam.model.vo.RefreshTokenVO;
 import com.ez.admin.iam.model.vo.UserLoginVO;
 import com.ez.admin.iam.service.AuthService;
-import com.ez.admin.result.entity.R;
+import com.ez.admin.core.entity.R;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

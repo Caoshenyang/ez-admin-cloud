@@ -9,13 +9,23 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>ez-admin-result-common</artifactId>
-    <description>统一返回结果公共模块：提供 R&lt;T&gt; 统一返回对象和 ResultCode 枚举</description>
+    <artifactId>ez-admin-core-common</artifactId>
+    <description>核心公共模块：提供统一返回对象、全局配置、通用枚举等核心能力</description>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Jackson 3 版本 -->
+        <jackson.version>3.0.3</jackson.version>
     </properties>
+
+    <dependencies>
+        <!-- Spring Boot Jackson 自动配置 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-jackson</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

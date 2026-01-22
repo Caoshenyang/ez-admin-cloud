@@ -12,9 +12,9 @@
     <artifactId>ez-admin-common</artifactId>
     <description> 公共模块：提供通用工具类、常量定义、枚举等</description>
     <modules>
+        <module>ez-admin-core-common</module>
         <module>ez-admin-satoken-common</module>
         <module>ez-admin-feign-common</module>
-        <module>ez-admin-result-common</module>
         <module>ez-admin-redis-common</module>
     </modules>
     <packaging>pom</packaging>

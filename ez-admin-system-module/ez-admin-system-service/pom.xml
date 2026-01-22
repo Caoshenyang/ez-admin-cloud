@@ -25,10 +25,10 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
-        <!-- Result Common：统一返回结果对象 -->
+        <!-- Core Common：核心公共模块 -->
         <dependency>
             <groupId>com.ez.admin</groupId>
-            <artifactId>ez-admin-result-common</artifactId>
+            <artifactId>ez-admin-core-common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

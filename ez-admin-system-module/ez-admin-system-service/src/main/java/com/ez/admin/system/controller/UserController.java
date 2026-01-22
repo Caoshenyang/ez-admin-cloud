@@ -1,6 +1,6 @@
 package com.ez.admin.system.controller;
 
-import com.ez.admin.result.entity.R;
+import com.ez.admin.core.entity.R;
 import com.ez.admin.system.api.dto.UserAuthenticationRequestDTO;
 import com.ez.admin.system.api.dto.UserAuthenticationVO;
 import com.ez.admin.system.api.dto.UserRoleVO;

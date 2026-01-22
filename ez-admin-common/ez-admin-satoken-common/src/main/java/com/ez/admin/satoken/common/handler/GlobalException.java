@@ -1,8 +1,8 @@
 package com.ez.admin.satoken.common.handler;
 
 import cn.dev33.satoken.exception.*;
-import com.ez.admin.result.entity.R;
-import com.ez.admin.result.enums.ResultCode;
+import com.ez.admin.core.entity.R;
+import com.ez.admin.core.enums.ResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

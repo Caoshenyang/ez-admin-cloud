@@ -1,13 +1,19 @@
 package com.ez.admin.feign.decoder;
 
+import com.ez.admin.core.entity.R;
+import com.ez.admin.core.enums.ResultCode;
 import com.ez.admin.feign.exception.BusinessException;
-import com.ez.admin.result.entity.R;
-import com.ez.admin.result.enums.ResultCode;
 import feign.Response;
 import feign.codec.DecodeException;
 import feign.codec.Decoder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.reflect.TypeUtils;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.cloud.client.loadbalancer.SimpleObjectProvider;
+import org.springframework.cloud.openfeign.support.FeignHttpMessageConverters;
+import org.springframework.cloud.openfeign.support.SpringDecoder;
+import org.springframework.http.converter.HttpMessageConverters;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -15,14 +21,18 @@ import java.util.Objects;
 
 /**
  * Feign 结果解码器 (优化版)
+ * <p>
+ * 使用延迟加载的 Decoder 避免循环依赖问题。
+ * </p>
  */
 @Slf4j
 public class FeignResultDecoder implements Decoder {
 
     private final Decoder delegate;
 
-    public FeignResultDecoder(Decoder delegate) {
-        this.delegate = delegate;
+    public FeignResultDecoder(ObjectProvider<FeignHttpMessageConverters> feignHttpMessageConverters) {
+        // 传入 Spring Cloud 2025 要求的 ObjectProvider
+        this.delegate = new SpringDecoder(feignHttpMessageConverters);
     }
 
     @Override

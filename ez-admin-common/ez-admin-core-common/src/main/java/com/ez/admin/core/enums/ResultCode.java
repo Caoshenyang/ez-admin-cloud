@@ -1,4 +1,4 @@
-package com.ez.admin.result.enums;
+package com.ez.admin.core.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

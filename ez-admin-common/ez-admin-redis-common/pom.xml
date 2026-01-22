@@ -10,27 +10,26 @@
     </parent>
 
     <artifactId>ez-admin-redis-common</artifactId>
-    <description>Redis公共模块：提供RedisTemplate配置、Jackson序列化配置等</description>
+    <description>Redis公共模块：提供RedisTemplate配置、序列化配置等</description>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- Jackson 3 版本 -->
-        <jackson.version>3.0.3</jackson.version>
     </properties>
 
     <dependencies>
+        <!-- 核心公共模块 -->
+        <dependency>
+            <groupId>com.ez.admin</groupId>
+            <artifactId>ez-admin-core-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Spring Data Redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
-
-        <!-- Spring Boot Jackson 自动配置 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-jackson</artifactId>
         </dependency>
 
     </dependencies>

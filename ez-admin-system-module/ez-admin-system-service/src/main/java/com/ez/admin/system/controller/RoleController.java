@@ -1,6 +1,6 @@
 package com.ez.admin.system.controller;
 
-import com.ez.admin.result.entity.R;
+import com.ez.admin.core.entity.R;
 import com.ez.admin.system.api.dto.RolePermissionVO;
 import com.ez.admin.system.entity.SysRole;
 import com.ez.admin.system.service.ISysRoleService;

@@ -1,6 +1,6 @@
-package com.ez.admin.result.entity;
+package com.ez.admin.core.entity;
 
-import com.ez.admin.result.enums.ResultCode;
+import com.ez.admin.core.enums.ResultCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
