@@ -8,12 +8,9 @@ import feign.codec.DecodeException;
 import feign.codec.Decoder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.reflect.TypeUtils;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.cloud.client.loadbalancer.SimpleObjectProvider;
 import org.springframework.cloud.openfeign.support.FeignHttpMessageConverters;
 import org.springframework.cloud.openfeign.support.SpringDecoder;
-import org.springframework.http.converter.HttpMessageConverters;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -57,7 +54,13 @@ public class FeignResultDecoder implements Decoder {
         }
 
         // 4. 执行业务解包
-        Type wrappedType = TypeUtils.parameterize(R.class, type);
+        Type wrappedType;
+        // 判断：如果 type 已经是以 R 开头的泛型了（比如 R<User>），就别再嵌套包装成 R<R<User>> 了
+        if (TypeUtils.isAssignable(type, R.class)) {
+            wrappedType = type;
+        } else {
+            wrappedType = TypeUtils.parameterize(R.class, type);
+        }
         try {
             R<?> result = (R<?>) delegate.decode(response, wrappedType);
 
