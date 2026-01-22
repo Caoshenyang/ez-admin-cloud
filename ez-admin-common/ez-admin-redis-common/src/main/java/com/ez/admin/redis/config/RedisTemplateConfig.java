@@ -21,13 +21,12 @@ public class RedisTemplateConfig {
 
     @Bean
     @Primary
-    @ConditionalOnBean(RedisConnectionFactory.class)
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory, ObjectMapper globalMapper) {
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory, ObjectMapper objectMapper) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
 
         // 1. 创建 Redis 专用的 ObjectMapper
-        ObjectMapper redisMapper = createRedisObjectMapper(globalMapper);
+        ObjectMapper redisMapper = createRedisObjectMapper(objectMapper);
 
         // 2. 初始化序列化器
         // 注意：Spring Data Redis 的 GenericJacksonJsonRedisSerializer 在适配 Jackson 3 时，
@@ -49,7 +48,7 @@ public class RedisTemplateConfig {
      * 构建 Redis 专用的 Jackson 实例
      * 在 Jackson 3.x 中，推荐从现有 Mapper 的配置出发重新 build
      */
-    private ObjectMapper createRedisObjectMapper(ObjectMapper globalMapper) {
+    private ObjectMapper createRedisObjectMapper(ObjectMapper objectMapper) {
         // 1. 配置安全白名单校验器
         PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder()
                 .allowIfBaseType("com.ez.admin.")
@@ -60,7 +59,7 @@ public class RedisTemplateConfig {
 
         // 2. Jackson 3.x 推荐写法：使用 rebuild()
         // 这会自动继承 globalMapper 的所有 Module（包括时间处理和 Long 转换）
-        return globalMapper.rebuild()
+        return objectMapper.rebuild()
                 // 额外添加 Redis 专用的多态类型支持
                 .activateDefaultTyping(ptv, DefaultTyping.NON_FINAL)
                 .build();

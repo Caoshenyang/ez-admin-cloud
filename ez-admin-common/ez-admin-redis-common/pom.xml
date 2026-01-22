@@ -27,10 +27,10 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
-        <!-- Jackson 3 Core (用于 ObjectMapper 配置) -->
+        <!-- Spring Boot Jackson 自动配置 -->
         <dependency>
-            <groupId>tools.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-jackson</artifactId>
         </dependency>
 
     </dependencies>
