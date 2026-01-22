@@ -1,6 +1,6 @@
 package com.ez.admin.iam.redis;
 
-import com.ez.admin.system.api.dto.RolePermissionVO;
+import com.ez.admin.system.api.vo.RolePermissionVO;
 import com.ez.admin.system.api.feign.SystemUserFeignClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

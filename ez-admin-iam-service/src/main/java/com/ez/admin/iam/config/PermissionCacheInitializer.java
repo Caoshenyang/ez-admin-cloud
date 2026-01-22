@@ -1,8 +1,8 @@
 package com.ez.admin.iam.config;
 
 import com.ez.admin.iam.redis.PermissionCacheService;
-import com.ez.admin.system.api.dto.RolePermissionVO;
 import com.ez.admin.system.api.feign.SystemUserFeignClient;
+import com.ez.admin.system.api.vo.RolePermissionVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -67,10 +67,7 @@ public class PermissionCacheInitializer implements ApplicationRunner {
 
             for (RolePermissionVO rolePermission : rolePermissions) {
                 try {
-                    permissionCacheService.cacheRolePermissions(
-                            rolePermission.getRoleId(),
-                            rolePermission.getPermissions()
-                    );
+                    permissionCacheService.cacheRolePermissions(rolePermission.getRoleId(), rolePermission.getPermissions());
                     successCount++;
                     log.debug("缓存角色权限成功: roleId={}, roleLabel={}, 权限数量={}",
                             rolePermission.getRoleId(),

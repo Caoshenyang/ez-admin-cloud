@@ -1,4 +1,4 @@
-package com.ez.admin.system.api.dto;
+package com.ez.admin.system.api.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

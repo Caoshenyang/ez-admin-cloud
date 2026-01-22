@@ -1,7 +1,7 @@
 package com.ez.admin.system.controller;
 
 import com.ez.admin.core.entity.R;
-import com.ez.admin.system.api.dto.RolePermissionVO;
+import com.ez.admin.system.api.vo.RolePermissionVO;
 import com.ez.admin.system.entity.SysRole;
 import com.ez.admin.system.service.SysRoleService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,21 +51,10 @@ public class RoleController {
     public R<List<RolePermissionVO>> getAllRolePermissions() {
         log.info("收到查询所有角色权限请求");
 
-        List<com.ez.admin.system.model.vo.RolePermissionVO> rolePermissions = roleService.getAllRolePermissions();
+        List<RolePermissionVO> rolePermissions = roleService.getAllRolePermissions();
 
-        // 转换为API响应DTO
-        List<RolePermissionVO> response = rolePermissions.stream()
-                .map(vo -> {
-                    RolePermissionVO dto = new RolePermissionVO();
-                    dto.setRoleId(vo.getRoleId());
-                    dto.setRoleLabel(vo.getRoleLabel());
-                    dto.setPermissions(vo.getPermissions());
-                    return dto;
-                })
-                .collect(Collectors.toList());
+        log.info("查询所有角色权限成功: 角色数量={}", rolePermissions.size());
 
-        log.info("查询所有角色权限成功: 角色数量={}", response.size());
-
-        return R.ok(response);
+        return R.ok(rolePermissions);
     }
 }

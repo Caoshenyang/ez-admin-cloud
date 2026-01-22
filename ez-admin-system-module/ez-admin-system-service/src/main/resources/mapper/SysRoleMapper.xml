@@ -6,7 +6,7 @@
         查询所有角色及其关联的权限标识列表
         关联角色菜单关系表和菜单表，获取每个角色对应的权限标识
     -->
-    <resultMap id="RolePermissionVOMap" type="com.ez.admin.system.model.vo.RolePermissionVO">
+    <resultMap id="RolePermissionVOMap" type="com.ez.admin.system.api.vo.RolePermissionVO">
         <id property="roleId" column="role_id"/>
         <result property="roleLabel" column="role_label"/>
         <collection property="permissions" ofType="string">

@@ -1,9 +1,9 @@
 package com.ez.admin.system.service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ez.admin.system.api.vo.RolePermissionVO;
 import com.ez.admin.system.entity.SysRole;
 import com.ez.admin.system.mapper.SysRoleMapper;
-import com.ez.admin.system.model.vo.RolePermissionVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
