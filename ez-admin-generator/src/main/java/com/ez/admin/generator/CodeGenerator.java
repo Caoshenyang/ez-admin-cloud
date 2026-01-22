@@ -122,6 +122,7 @@ public class CodeGenerator {
                             .mapperBuilder() // 设置 mapper 生成规则
                             .serviceBuilder() // 设置 service 生成规则
                             .disableService() // 禁用 Service 接口层生成
+                            .formatServiceImplFileName("%sService") // 格式化 ServiceImpl 类名，去掉后缀 "Impl"
                             .mapperBuilder() // 设置 mapper 生成规则
                             .controllerBuilder() // 设置 controller 生成规则
                             .disable() // 禁用生成 @RestController 控制器（根据业务需求手动创建）
