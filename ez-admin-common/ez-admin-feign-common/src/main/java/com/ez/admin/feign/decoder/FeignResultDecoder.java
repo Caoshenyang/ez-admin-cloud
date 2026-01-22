@@ -1,7 +1,7 @@
 package com.ez.admin.feign.decoder;
 
 import com.ez.admin.core.entity.R;
-import com.ez.admin.core.enums.ResultCode;
+import com.ez.admin.core.enums.BusinessErrorCode;
 import com.ez.admin.feign.exception.BusinessException;
 import feign.Response;
 import feign.codec.DecodeException;
@@ -86,7 +86,7 @@ public class FeignResultDecoder implements Decoder {
         }
 
         // 业务状态码校验 (使用 Objects.equals 防止 NPE)
-        if (!Objects.equals(ResultCode.SUCCESS.getCode(), result.getCode())) {
+        if (!Objects.equals(BusinessErrorCode.SUCCESS.getCode(), result.getCode())) {
             String errorMsg = result.getMessage() != null ? result.getMessage() : "远程服务调用失败";
 
             log.warn("Feign 业务异常: url={}, code={}, msg={}",

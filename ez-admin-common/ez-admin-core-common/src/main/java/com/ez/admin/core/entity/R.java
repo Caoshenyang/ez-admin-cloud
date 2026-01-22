@@ -1,6 +1,7 @@
 package com.ez.admin.core.entity;
 
-import com.ez.admin.core.enums.ResultCode;
+import com.ez.admin.core.enums.BusinessErrorCode;
+import com.ez.admin.core.enums.ErrorCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +17,7 @@ import java.util.UUID;
  * 封装所有 API 接口的返回结果，包含：
  * <ul>
  *   <li>success：操作是否成功（前端判断的捷径）</li>
- *   <li>code：业务状态码（区分成功/失败类型）</li>
+ *   <li>code：业务错误码（7位分段式错误码，区分成功/失败类型）</li>
  *   <li>message：提示信息</li>
  *   <li>data：返回数据</li>
  *   <li>timestamp：响应时间戳（用于监控）</li>
@@ -53,10 +54,11 @@ public class R<T> implements Serializable {
     private Boolean success;
 
     /**
-     * 业务状态码
+     * 业务错误码
      * <p>
-     * 区分成功/失败类型，便于前端根据不同状态码进行差异化处理。
-     * 详见 {@link ResultCode}。
+     * 采用7位分段式错误码，格式：{错误级别}{服务代码}{具体错误码}。
+     * 区分成功/失败类型，便于前端根据不同错误码进行差异化处理。
+     * 详见 {@link ErrorCode}。
      * </p>
      */
     @Schema(description = "业务状态码")
@@ -117,7 +119,7 @@ public class R<T> implements Serializable {
         this.code = code;
         this.message = message;
         this.data = data;
-        this.success = ResultCode.SUCCESS.getCode().equals(code);
+        this.success = BusinessErrorCode.SUCCESS.getCode().equals(code);
         this.timestamp = System.currentTimeMillis();
         // TODO: 接入分布式追踪系统后，替换为真实 TraceId
         this.traceId = UUID.randomUUID().toString().replace("-", "").substring(0, 16);
@@ -134,8 +136,8 @@ public class R<T> implements Serializable {
      */
     public static <T> R<T> ok(T data) {
         return new R<>(
-                ResultCode.SUCCESS.getCode(),
-                ResultCode.SUCCESS.getMessage(),
+                BusinessErrorCode.SUCCESS.getCode(),
+                BusinessErrorCode.SUCCESS.getMessage(),
                 data
         );
     }
@@ -160,7 +162,7 @@ public class R<T> implements Serializable {
      */
     public static <T> R<T> ok(String message, T data) {
         return new R<>(
-                ResultCode.SUCCESS.getCode(),
+                BusinessErrorCode.SUCCESS.getCode(),
                 message,
                 data
         );
@@ -169,31 +171,31 @@ public class R<T> implements Serializable {
     // ========== 失败返回 ==========
 
     /**
-     * 失败返回 - 使用 ResultCode 枚举
+     * 失败返回 - 使用错误码枚举
      *
-     * @param resultCode 业务状态码枚举
-     * @param <T>        数据类型
+     * @param errorCode 错误码枚举
+     * @param <T>       数据类型
      * @return R 实例
      */
-    public static <T> R<T> fail(ResultCode resultCode) {
+    public static <T> R<T> fail(ErrorCode errorCode) {
         return new R<>(
-                resultCode.getCode(),
-                resultCode.getMessage(),
+                errorCode.getCode(),
+                errorCode.getMessage(),
                 null
         );
     }
 
     /**
-     * 失败返回 - 使用 ResultCode 枚举 + 自定义消息
+     * 失败返回 - 使用错误码枚举 + 自定义消息
      *
-     * @param resultCode 业务状态码枚举
-     * @param message    自定义提示信息
-     * @param <T>        数据类型
+     * @param errorCode 错误码枚举
+     * @param message   自定义提示信息
+     * @param <T>       数据类型
      * @return R 实例
      */
-    public static <T> R<T> fail(ResultCode resultCode, String message) {
+    public static <T> R<T> fail(ErrorCode errorCode, String message) {
         return new R<>(
-                resultCode.getCode(),
+                errorCode.getCode(),
                 message,
                 null
         );
@@ -212,25 +214,25 @@ public class R<T> implements Serializable {
     }
 
     /**
-     * 失败返回 - 仅指定消息（使用默认错误码 5000）
+     * 失败返回 - 仅指定消息（使用默认错误码 2000000）
      *
      * @param message 提示信息
      * @param <T>     数据类型
      * @return R 实例
      */
     public static <T> R<T> fail(String message) {
-        return fail(ResultCode.INTERNAL_ERROR.getCode(), message);
+        return fail(BusinessErrorCode.INTERNAL_ERROR.getCode(), message);
     }
 
     /**
-     * 失败返回 - 仅指定消息（使用系统繁忙错误码 5001）
+     * 失败返回 - 仅指定消息（使用系统繁忙错误码 2000001）
      *
      * @param message 提示信息
      * @param <T>     数据类型
      * @return R 实例
      */
     public static <T> R<T> busy(String message) {
-        return fail(ResultCode.SYSTEM_BUSY.getCode(), message);
+        return fail(BusinessErrorCode.SYSTEM_BUSY.getCode(), message);
     }
 
     // ========== 条件判断 ==========
@@ -241,7 +243,7 @@ public class R<T> implements Serializable {
      * @return true=成功，false=失败
      */
     public boolean isSuccess() {
-        return ResultCode.SUCCESS.getCode().equals(this.code);
+        return BusinessErrorCode.SUCCESS.getCode().equals(this.code);
     }
 
     /**

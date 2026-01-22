@@ -2,7 +2,7 @@ package com.ez.admin.satoken.common.handler;
 
 import cn.dev33.satoken.exception.*;
 import com.ez.admin.core.entity.R;
-import com.ez.admin.core.enums.ResultCode;
+import com.ez.admin.core.enums.BusinessErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -35,7 +35,7 @@ public class GlobalException {
     @ExceptionHandler(NotLoginException.class)
     public R<Void> handleNotLoginException(NotLoginException e) {
         log.warn("未登录异常: {}, message={}", e.getClass().getSimpleName(), e.getMessage());
-        return R.fail(ResultCode.UNAUTHORIZED, "用户未登录，请先登录");
+        return R.fail(BusinessErrorCode.UNAUTHORIZED, "用户未登录，请先登录");
     }
 
     /**
@@ -44,7 +44,7 @@ public class GlobalException {
     @ExceptionHandler(NotPermissionException.class)
     public R<Void> handleNotPermissionException(NotPermissionException e) {
         log.warn("缺少权限异常: permission={}, message={}", e.getPermission(), e.getMessage());
-        return R.fail(ResultCode.PERMISSION_DENIED, "缺少权限：" + e.getPermission());
+        return R.fail(BusinessErrorCode.PERMISSION_DENIED, "缺少权限：" + e.getPermission());
     }
 
     /**
@@ -53,7 +53,7 @@ public class GlobalException {
     @ExceptionHandler(NotRoleException.class)
     public R<Void> handleNotRoleException(NotRoleException e) {
         log.warn("缺少角色异常: role={}, message={}", e.getRole(), e.getMessage());
-        return R.fail(ResultCode.ROLE_DENIED, "缺少角色：" + e.getRole());
+        return R.fail(BusinessErrorCode.ROLE_DENIED, "缺少角色：" + e.getRole());
     }
 
     /**
@@ -62,7 +62,7 @@ public class GlobalException {
     @ExceptionHandler(NotSafeException.class)
     public R<Void> handleNotSafeException(NotSafeException e) {
         log.warn("二级认证校验失败异常: service={}, message={}", e.getService(), e.getMessage());
-        return R.fail(ResultCode.FORBIDDEN, "二级认证校验失败：" + e.getService());
+        return R.fail(BusinessErrorCode.FORBIDDEN, "二级认证校验失败：" + e.getService());
     }
 
     /**
@@ -72,7 +72,7 @@ public class GlobalException {
     public R<Void> handleDisableServiceException(DisableServiceException e) {
         log.warn("服务封禁异常: service={}, level={}, disableTime={}",
                 e.getService(), e.getLevel(), e.getDisableTime());
-        return R.fail(ResultCode.FORBIDDEN,
+        return R.fail(BusinessErrorCode.FORBIDDEN,
                 String.format("当前账号 %s 服务已被封禁 (level=%d)，%d 秒后解封",
                         e.getService(), e.getLevel(), e.getDisableTime()));
     }
@@ -83,7 +83,7 @@ public class GlobalException {
     @ExceptionHandler(NotHttpBasicAuthException.class)
     public R<Void> handleNotHttpBasicAuthException(NotHttpBasicAuthException e) {
         log.warn("Http Basic 校验失败: message={}", e.getMessage());
-        return R.fail(ResultCode.UNAUTHORIZED, e.getMessage());
+        return R.fail(BusinessErrorCode.UNAUTHORIZED, e.getMessage());
     }
 
     // ========== 系统通用异常 ==========
@@ -97,6 +97,6 @@ public class GlobalException {
     @ExceptionHandler(Exception.class)
     public R<Void> handleException(Exception e) {
         log.error("系统异常: {}, message={}", e.getClass().getSimpleName(), e.getMessage(), e);
-        return R.fail(ResultCode.INTERNAL_ERROR, "系统内部错误，请稍后重试");
+        return R.fail(BusinessErrorCode.INTERNAL_ERROR, "系统内部错误，请稍后重试");
     }
 }
