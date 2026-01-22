@@ -1,8 +1,7 @@
-package com.ez.admin.system.service.impl;
+package com.ez.admin.system.service;
 
 import com.ez.admin.system.entity.SysRoleMenuRelation;
 import com.ez.admin.system.mapper.SysRoleMenuRelationMapper;
-import com.ez.admin.system.service.ISysRoleMenuRelationService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +11,9 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author ez-admin
- * @since 2026-01-21
+ * @since 2026-01-22
  */
 @Service
-public class SysRoleMenuRelationServiceImpl extends ServiceImpl<SysRoleMenuRelationMapper, SysRoleMenuRelation> implements ISysRoleMenuRelationService {
+public class SysRoleMenuRelationServiceImpl extends ServiceImpl<SysRoleMenuRelationMapper, SysRoleMenuRelation> {
 
 }

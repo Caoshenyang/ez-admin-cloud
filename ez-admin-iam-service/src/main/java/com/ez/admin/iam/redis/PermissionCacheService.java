@@ -1,6 +1,5 @@
-package com.ez.admin.iam.service.impl;
+package com.ez.admin.iam.redis;
 
-import com.ez.admin.iam.service.PermissionCacheService;
 import com.ez.admin.system.api.dto.RolePermissionVO;
 import com.ez.admin.system.api.feign.SystemUserFeignClient;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 权限缓存服务实现类
+ * 权限缓存服务类
  * <p>
  * 使用 Redis 存储角色-权限、用户-角色、用户-权限的映射关系。
  * </p>
@@ -31,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PermissionCacheServiceImpl implements PermissionCacheService {
+public class PermissionCacheService {
 
     /**
      * Redis Key 前缀常量
@@ -48,7 +47,6 @@ public class PermissionCacheServiceImpl implements PermissionCacheService {
     private final RedisTemplate<String, Object> redisTemplate;
     private final SystemUserFeignClient systemUserFeignClient;
 
-    @Override
     public void cacheRolePermissions(Long roleId, List<String> permissions) {
         String key = ROLE_PERMISSIONS_KEY_PREFIX + roleId;
         try {
@@ -62,7 +60,6 @@ public class PermissionCacheServiceImpl implements PermissionCacheService {
         }
     }
 
-    @Override
     public List<String> getRolePermissions(Long roleId) {
         String key = ROLE_PERMISSIONS_KEY_PREFIX + roleId;
         try {
@@ -81,7 +78,6 @@ public class PermissionCacheServiceImpl implements PermissionCacheService {
         }
     }
 
-    @Override
     public void cacheUserRoles(Long userId, List<Long> roleIds) {
         String key = USER_ROLES_KEY_PREFIX + userId;
         try {
@@ -95,7 +91,6 @@ public class PermissionCacheServiceImpl implements PermissionCacheService {
         }
     }
 
-    @Override
     public List<Long> getUserRoles(Long userId) {
         String key = USER_ROLES_KEY_PREFIX + userId;
         try {
@@ -114,7 +109,6 @@ public class PermissionCacheServiceImpl implements PermissionCacheService {
         }
     }
 
-    @Override
     public void cacheUserPermissions(Long userId, List<String> permissions) {
         String key = USER_PERMISSIONS_KEY_PREFIX + userId;
         try {
@@ -128,7 +122,6 @@ public class PermissionCacheServiceImpl implements PermissionCacheService {
         }
     }
 
-    @Override
     public List<String> getUserPermissions(Long userId) {
         String key = USER_PERMISSIONS_KEY_PREFIX + userId;
         try {
@@ -147,7 +140,6 @@ public class PermissionCacheServiceImpl implements PermissionCacheService {
         }
     }
 
-    @Override
     public void evictRolePermissions(Long roleId) {
         String key = ROLE_PERMISSIONS_KEY_PREFIX + roleId;
         try {
@@ -158,7 +150,6 @@ public class PermissionCacheServiceImpl implements PermissionCacheService {
         }
     }
 
-    @Override
     public void evictUserCache(Long userId) {
         String rolesKey = USER_ROLES_KEY_PREFIX + userId;
         String permsKey = USER_PERMISSIONS_KEY_PREFIX + userId;
@@ -171,7 +162,6 @@ public class PermissionCacheServiceImpl implements PermissionCacheService {
         }
     }
 
-    @Override
     public void refreshAllRolePermissions() {
         log.info("========================================");
         log.info("开始刷新所有角色权限缓存...");

@@ -3,7 +3,7 @@ package com.ez.admin.system.controller;
 import com.ez.admin.core.entity.R;
 import com.ez.admin.system.api.dto.RolePermissionVO;
 import com.ez.admin.system.entity.SysRole;
-import com.ez.admin.system.service.ISysRoleService;
+import com.ez.admin.system.service.SysRoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @Tag(name = "角色管理", description = "角色相关接口（供内部服务调用）")
 public class RoleController {
 
-    private final ISysRoleService roleService;
+    private final SysRoleService roleService;
 
     /**
      * 查询所有角色的权限列表

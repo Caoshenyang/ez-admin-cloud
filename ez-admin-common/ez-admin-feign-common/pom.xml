@@ -24,7 +24,11 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
-
+        <!-- Spring Cloud LoadBalancer：客户端负载均衡 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
         <!-- Spring Boot Web (提供 HTTP 消息转换器) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

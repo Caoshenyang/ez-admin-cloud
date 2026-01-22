@@ -6,9 +6,9 @@ import com.ez.admin.system.api.dto.UserAuthenticationVO;
 import com.ez.admin.system.api.dto.UserRoleVO;
 import com.ez.admin.system.entity.SysRole;
 import com.ez.admin.system.entity.SysUser;
-import com.ez.admin.system.service.ISysRoleService;
-import com.ez.admin.system.service.ISysUserRoleRelationService;
-import com.ez.admin.system.service.ISysUserService;
+import com.ez.admin.system.service.SysRoleService;
+import com.ez.admin.system.service.SysUserRoleRelationService;
+import com.ez.admin.system.service.SysUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,9 +35,9 @@ import java.util.stream.Collectors;
 @Tag(name = "用户管理", description = "用户相关接口（供内部服务调用）")
 public class UserController {
 
-    private final ISysUserService userService;
-    private final ISysUserRoleRelationService userRoleRelationService;
-    private final ISysRoleService roleService;
+    private final SysUserService userService;
+    private final SysUserRoleRelationService userRoleRelationService;
+    private final SysRoleService roleService;
 
     /**
      * 用户认证接口

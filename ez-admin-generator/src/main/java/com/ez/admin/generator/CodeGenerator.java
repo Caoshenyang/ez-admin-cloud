@@ -99,8 +99,7 @@ public class CodeGenerator {
                             .moduleName(module)
                             .entity("entity")
                             .mapper("mapper")
-                            .service("service")
-                            .serviceImpl("service.impl")
+                            .serviceImpl("service") // 不生成接口，直接生成 Service 类
                             .controller("controller")
                             .pathInfo(Collections.singletonMap(OutputFile.xml, resourcesOutputDir + "/mapper/"));
 
@@ -122,6 +121,7 @@ public class CodeGenerator {
                             .fieldUseJavaDoc(false) // 禁用字段 JavaDoc 注释
                             .mapperBuilder() // 设置 mapper 生成规则
                             .serviceBuilder() // 设置 service 生成规则
+                            .disableService() // 禁用 Service 接口层生成
                             .mapperBuilder() // 设置 mapper 生成规则
                             .controllerBuilder() // 设置 controller 生成规则
                             .disable() // 禁用生成 @RestController 控制器（根据业务需求手动创建）

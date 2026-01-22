@@ -1,6 +1,6 @@
 package com.ez.admin.iam.config;
 
-import com.ez.admin.iam.service.PermissionCacheService;
+import com.ez.admin.iam.redis.PermissionCacheService;
 import com.ez.admin.system.api.dto.RolePermissionVO;
 import com.ez.admin.system.api.feign.SystemUserFeignClient;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +50,8 @@ public class PermissionCacheInitializer implements ApplicationRunner {
         log.info("开始初始化角色权限缓存...");
         log.info("========================================");
 
+        // TODO: [优化点] 集群环境下多实例同时启动会产生竞态条件。
+        // 建议：引入分布式锁 (如 Redisson 或 redisTemplate.setIfAbsent)，确保仅有一个实例执行初始化操作。
         try {
             // 通过 Feign 调用系统服务，获取所有角色权限
             List<RolePermissionVO> rolePermissions = systemUserFeignClient.getAllRolePermissions();
